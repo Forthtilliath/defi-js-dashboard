@@ -15,7 +15,6 @@ header {
         }
 
         &:hover {
-
         }
     }
 }
@@ -36,9 +35,9 @@ header {
         width: 95%;
         border-radius: 20px;
         height: 1000px;
-        margin: 3rem 0;
-        padding: 2rem;
-        gap: 2rem;
+        margin: 3em 0;
+        padding: 2em;
+        gap: 2em;
 
         &#home {
             background-color: #00800055;
@@ -55,6 +54,52 @@ header {
 
         &.active {
             display: block;
+            animation: fade_in_show 1.5s;
+        }
+
+        .sectionHeader {
+            @include center(center);
+            flex-direction: column;
+
+            .sectionTitle {
+                @include center(center);
+                margin-bottom: 1em;
+            }
+
+            .sectionFilter {
+                @include center(space-between);
+                max-width: 400px;
+                width: 100%;
+                margin-bottom: 1em;
+
+                .checkboxWrapper {
+                    @include center();
+
+                    label {
+                        margin-left: .5em;
+                    }
+
+                }
+
+            }
+        }
+
+        .sectionContent {
+            @include center();
+            width: 100%;
+
+            .sectionLeft {
+                // justify-self: flex-end;
+                text-align: end;
+                background-color: green;
+                width: 50%;
+                padding: 0.5em 1em;
+            }
+            .sectionRight {
+                background-color: red;
+                width: 50%;
+                padding: 0.5em 1em;
+            }
         }
     }
 }

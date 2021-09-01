@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Dashboard</title>
         <link rel="stylesheet" href="styles/css/style.css" />
-        <script src="scripts/js/index.js" defer></script>
+        <script src="scripts/js/index.js" type="module" defer></script>
     </head>
     <body>
         <header class="header">
@@ -36,9 +36,19 @@
         </header>
 
         <div class="container">
-            <section id="home" class="section active"></section>
+            <section id="home" class="section"></section>
             <section id="user" class="section"></section>
-            <section id="historic" class="section"></section>
+            <section id="historic" class="section active">
+                <div class="sectionHeader">
+                    <h2 class="sectionTitle">Historique des parties</h2>
+                    <div class="sectionFilter"></div>
+                </div>
+
+                <div class="sectionContent">
+                    <div class="sectionLeft">AEDA</div>
+                    <div class="sectionRight">AEDA</div>
+                </div>
+            </section>
             <section id="options" class="section"></section>
         </div>
 

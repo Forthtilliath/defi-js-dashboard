@@ -55,6 +55,19 @@ a, a:visited {
   color: inherit;
 }
 
+@keyframes fade_in_show {
+  0% {
+    opacity: 0;
+    visibility: hidden;
+  }
+  1% {
+    visibility: visible;
+  }
+  100% {
+    opacity: 1;
+    visibility: visible;
+  }
+}
 header {
   background-color: #0202023a;
   display: flex;
@@ -89,9 +102,9 @@ header .link .icon {
   width: 95%;
   border-radius: 20px;
   height: 1000px;
-  margin: 3rem 0;
-  padding: 2rem;
-  gap: 2rem;
+  margin: 3em 0;
+  padding: 2em;
+  gap: 2em;
 }
 .container .section#home {
   background-color: #00800055;
@@ -107,6 +120,52 @@ header .link .icon {
 }
 .container .section.active {
   display: block;
+  animation: fade_in_show 1.5s;
+}
+.container .section .sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.container .section .sectionHeader .sectionTitle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1em;
+}
+.container .section .sectionHeader .sectionFilter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 400px;
+  width: 100%;
+  margin-bottom: 1em;
+}
+.container .section .sectionHeader .sectionFilter .checkboxWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.container .section .sectionHeader .sectionFilter .checkboxWrapper label {
+  margin-left: 0.5em;
+}
+.container .section .sectionContent {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+}
+.container .section .sectionContent .sectionLeft {
+  text-align: end;
+  background-color: green;
+  width: 50%;
+  padding: 0.5em 1em;
+}
+.container .section .sectionContent .sectionRight {
+  background-color: red;
+  width: 50%;
+  padding: 0.5em 1em;
 }
 
 .footer {
