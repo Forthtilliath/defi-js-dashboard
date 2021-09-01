@@ -1,25 +1,25 @@
 export const games = [
     {
         id: 0,
-        users: [0, 1, 2],
+        players: [0, 1, 2],
         scores: [80, 50, 191],
         extansions: [0, 1, 2],
     },
     {
         id: 1,
-        users: [0, 1, 2],
+        players: [0, 1, 2],
         scores: [98, 68, 122],
         extansions: [0, 1, 2],
     },
     {
         id: 2,
-        users: [0, 1, 2],
+        players: [0, 1, 2],
         scores: [152, 150, 160],
         extansions: [1, 2],
     },
     {
         id: 3,
-        users: [0, 1, 2],
+        players: [0, 1, 2],
         scores: [40, 50, 60],
         extansions: [0, 2],
     },

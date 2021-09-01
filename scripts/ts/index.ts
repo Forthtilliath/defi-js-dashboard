@@ -3,11 +3,29 @@ import * as utils from './utils.js';
 
 const links = document.querySelectorAll('.link') as NodeListOf<HTMLLinkElement>;
 const pages = document.querySelectorAll('.section') as NodeListOf<HTMLDivElement>;
-const filter = document.querySelector('.sectionFilter') as HTMLDivElement;
+const divFilter = document.querySelector('.sectionFilter') as HTMLDivElement;
+const divGames = document.querySelector('.sectionContent') as HTMLDivElement;
+
+interface IPlayer {
+    id: number;
+    name: string;
+    image: string;
+}
 
 let tabExtansions = new Array<number>();
+let tabPlayers = new Array<IPlayer>();
+let gamesFiltered = data.games;
 
-const changePage = (e: MouseEvent) => {
+// Event pour le changement de page
+links.forEach((link) => link.addEventListener('click', changePage));
+
+// Création des checkboxs pour les extansions
+data.extansions.forEach(createCheckboxExtansion);
+data.players.forEach(createPlayersArray);
+// Génération de l'historique des parties
+displayGames();
+
+function changePage(e: MouseEvent) {
     e.preventDefault();
     let element = e.target as HTMLElement;
     let tag = element.tagName;
@@ -21,9 +39,31 @@ const changePage = (e: MouseEvent) => {
 
     pages.forEach((page) => page.classList.remove('active'));
     pageElement.classList.add('active');
-};
+}
 
-const toggleExtansion = (e: Event) => {
+function displayGames() {
+    while (divGames.firstChild) divGames.firstChild.remove();
+
+    gamesFiltered.forEach((game) => {
+        const gameElement = document.createElement('div');
+        const leftElement = document.createElement('div');
+        const rightElement = document.createElement('div');
+
+        game.players.forEach((player) => {
+            const avatarElement = document.createElement('img');
+
+            avatarElement.classList.add('avatar');
+            avatarElement.src = 'images/players/' + tabPlayers[player].image;
+
+            leftElement.appendChild(avatarElement);
+        });
+        gameElement.appendChild(leftElement);
+        gameElement.appendChild(rightElement);
+        divGames.appendChild(gameElement);
+    });
+}
+
+function toggleExtansion(e: Event) {
     const checkbox = e.target as HTMLInputElement;
     const id = Number(checkbox.getAttribute('data-id'));
 
@@ -37,11 +77,12 @@ const toggleExtansion = (e: Event) => {
         }
     }
 
-    const games = data.games.filter((game) => utils.compareArrays(game.extansions, tabExtansions));
-    console.log(games);
-};
+    gamesFiltered = data.games.filter((game) => utils.compareArrays(game.extansions, tabExtansions));
+    console.log(gamesFiltered);
+    displayGames();
+}
 
-const createCheckboxExtansion = (extansion: { id: number; name: string }) => {
+function createCheckboxExtansion(extansion: { id: number; name: string }) {
     const container = document.createElement('span') as HTMLSpanElement;
     const label = document.createElement('label') as HTMLLabelElement;
     const checkbox = document.createElement('input') as HTMLInputElement;
@@ -63,9 +104,9 @@ const createCheckboxExtansion = (extansion: { id: number; name: string }) => {
     container.appendChild(checkbox);
     container.appendChild(label);
 
-    filter.appendChild(container);
-};
+    divFilter.appendChild(container);
+}
 
-links.forEach((link) => link.addEventListener('click', changePage));
-
-data.extansions.forEach(createCheckboxExtansion);
+function createPlayersArray(player: IPlayer) {
+    tabPlayers[player.id] = player;
+}

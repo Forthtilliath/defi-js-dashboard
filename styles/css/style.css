@@ -154,15 +154,32 @@ header .link .icon {
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  flex-direction: column;
   width: 100%;
 }
-.container .section .sectionContent .sectionLeft {
+.container .section .sectionContent > div {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  background-color: #ffffff55;
+}
+.container .section .sectionContent > div:nth-child(odd) {
+  background-color: #ffffff33;
+}
+.container .section .sectionContent > div > *:first-child {
   text-align: end;
-  background-color: green;
   width: 50%;
   padding: 0.5em 1em;
 }
-.container .section .sectionContent .sectionRight {
+.container .section .sectionContent > div > *:first-child .avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-left: 1em;
+}
+.container .section .sectionContent > div > *:last-child {
   background-color: red;
   width: 50%;
   padding: 0.5em 1em;
