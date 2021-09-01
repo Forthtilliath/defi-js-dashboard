@@ -1,4 +1,5 @@
 export declare const games: {
+    id: number;
     users: number[];
     scores: number[];
     extansions: number[];

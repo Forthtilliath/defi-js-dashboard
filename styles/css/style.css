@@ -120,7 +120,7 @@ header .link .icon {
 }
 .container .section.active {
   display: block;
-  animation: fade_in_show 1.5s;
+  animation: fade_in_show 1s;
 }
 .container .section .sectionHeader {
   display: flex;
