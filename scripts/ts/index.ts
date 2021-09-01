@@ -18,4 +18,3 @@ const changePage = (e:MouseEvent) => {
 }
 
 links.forEach(link => link.addEventListener('click', changePage));
-
