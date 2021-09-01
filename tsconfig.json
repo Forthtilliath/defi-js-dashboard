@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+        /* Visit https://aka.ms/tsconfig.json to read more about this file */
+        "target": "es6",
+        "outDir": "./scripts/js",
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "pretty": true,
+        "removeComments": true,
+        "composite": false,
+        "declaration": true,
+        "declarationDir": "./scripts/types"
+    },
+    "include": ["./scripts/ts/*"],
+    "exclude": ["node_modules", "scripts/js"]
+}
