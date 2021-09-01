@@ -14,7 +14,6 @@ interface IPlayer {
 
 let tabExtansions = new Array<number>();
 let tabPlayers = new Array<IPlayer>();
-let gamesFiltered = data.games;
 
 // Event pour le changement de page
 links.forEach((link) => link.addEventListener('click', changePage));
@@ -23,6 +22,7 @@ links.forEach((link) => link.addEventListener('click', changePage));
 data.extansions.forEach(createCheckboxExtansion);
 data.players.forEach(createPlayersArray);
 // Génération de l'historique des parties
+let gamesFiltered = getFilteredGames();
 displayGames();
 
 function changePage(e: MouseEvent) {
@@ -63,6 +63,10 @@ function displayGames() {
     });
 }
 
+function getFilteredGames() {
+    return data.games.filter((game) => utils.compareArrays(game.extansions, tabExtansions));
+}
+
 function toggleExtansion(e: Event) {
     const checkbox = e.target as HTMLInputElement;
     const id = Number(checkbox.getAttribute('data-id'));
@@ -77,7 +81,7 @@ function toggleExtansion(e: Event) {
         }
     }
 
-    gamesFiltered = data.games.filter((game) => utils.compareArrays(game.extansions, tabExtansions));
+    gamesFiltered = getFilteredGames();
     console.log(gamesFiltered);
     displayGames();
 }

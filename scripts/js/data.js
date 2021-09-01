@@ -23,6 +23,12 @@ export const games = [
         scores: [40, 50, 60],
         extansions: [0, 2],
     },
+    {
+        id: 4,
+        players: [0, 1, 2],
+        scores: [42, 69, 97],
+        extansions: [0, 1, 2],
+    },
 ];
 export const players = [
     {

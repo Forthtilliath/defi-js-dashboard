@@ -6,10 +6,10 @@ const divFilter = document.querySelector('.sectionFilter');
 const divGames = document.querySelector('.sectionContent');
 let tabExtansions = new Array();
 let tabPlayers = new Array();
-let gamesFiltered = data.games;
 links.forEach((link) => link.addEventListener('click', changePage));
 data.extansions.forEach(createCheckboxExtansion);
 data.players.forEach(createPlayersArray);
+let gamesFiltered = getFilteredGames();
 displayGames();
 function changePage(e) {
     e.preventDefault();
@@ -42,6 +42,9 @@ function displayGames() {
         divGames.appendChild(gameElement);
     });
 }
+function getFilteredGames() {
+    return data.games.filter((game) => utils.compareArrays(game.extansions, tabExtansions));
+}
 function toggleExtansion(e) {
     const checkbox = e.target;
     const id = Number(checkbox.getAttribute('data-id'));
@@ -55,7 +58,7 @@ function toggleExtansion(e) {
             tabExtansions.splice(index, 1);
         }
     }
-    gamesFiltered = data.games.filter((game) => utils.compareArrays(game.extansions, tabExtansions));
+    gamesFiltered = getFilteredGames();
     console.log(gamesFiltered);
     displayGames();
 }
