@@ -8,7 +8,7 @@ export const games = [
     {
         id: 1,
         players: [0, 1, 2],
-        scores: [98, 68, 122],
+        scores: [122, 68, 122],
         extansions: [0, 1, 2],
     },
     {
@@ -31,7 +31,7 @@ export const games = [
     },
 ];
 
-export const players = [
+export const players:IDataPlayer[] = [
     {
         id: 0,
         name: 'Isabelle',
@@ -49,7 +49,7 @@ export const players = [
     },
 ];
 
-export const extansions = [
+export const extansions:IDataExtansion[] = [
     {
         id: 0,
         name: 'Cities',

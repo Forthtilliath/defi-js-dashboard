@@ -4,12 +4,5 @@ export declare const games: {
     scores: number[];
     extansions: number[];
 }[];
-export declare const players: {
-    id: number;
-    name: string;
-    image: string;
-}[];
-export declare const extansions: {
-    id: number;
-    name: string;
-}[];
+export declare const players: IDataPlayer[];
+export declare const extansions: IDataExtansion[];

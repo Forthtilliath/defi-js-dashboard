@@ -1,26 +1,31 @@
 import * as data from './data.js';
 import * as utils from './utils.js';
-const links = document.querySelectorAll('.link');
-const pages = document.querySelectorAll('.section');
-const divFilter = document.querySelector('.sectionFilter');
-const divGames = document.querySelector('.sectionContent');
-const medals = {
-    '1st': new Image(),
-    '2nd': new Image(),
-    '3rd': new Image(),
+const Elements = {
+    links: document.querySelectorAll('.link'),
+    pages: document.querySelectorAll('.section'),
+    divFilter: document.querySelector('.sectionFilter'),
+    divGames: document.querySelector('.sectionContent'),
 };
-medals['1st'].setAttribute('src', './images/medals/1st.png');
-medals['2nd'].setAttribute('src', './images/medals/2nd.png');
-medals['3rd'].setAttribute('src', './images/medals/3rd.png');
-medals['1st'].classList.add('medal');
-medals['2nd'].classList.add('medal');
-medals['3rd'].classList.add('medal');
-let tabExtansions = new Array();
+const Images = {
+    medals: {
+        '1st': new Image(),
+        '2nd': new Image(),
+        '3rd': new Image(),
+    }
+};
+Images.medals['1st'].setAttribute('src', './images/medals/1st.png');
+Images.medals['2nd'].setAttribute('src', './images/medals/2nd.png');
+Images.medals['3rd'].setAttribute('src', './images/medals/3rd.png');
+Images.medals['1st'].classList.add('medal');
+Images.medals['2nd'].classList.add('medal');
+Images.medals['3rd'].classList.add('medal');
+let tabExtansionsActive = new Array();
 let tabPlayers = new Array();
-links.forEach((link) => link.addEventListener('click', changePage));
+let tabGamesFiltered = new Array();
+Elements.links.forEach((link) => link.addEventListener('click', changePage));
 data.extansions.forEach(createCheckboxExtansion);
 data.players.forEach(createPlayersArray);
-let gamesFiltered = getFilteredGames();
+tabGamesFiltered = getFilteredGames();
 displayGames();
 function createPlayersArray(player) {
     const avatar = document.createElement('img');
@@ -30,14 +35,14 @@ function createPlayersArray(player) {
     tabPlayers[player.id] = Object.assign(Object.assign({}, player), { avatar });
 }
 function getFilteredGames() {
-    return data.games.filter((game) => utils.compareArrays(game.extansions, tabExtansions));
+    return data.games.filter((game) => utils.compareArrays(game.extansions, tabExtansionsActive));
 }
 function createCheckboxExtansion(extansion) {
     const container = document.createElement('span');
     const label = document.createElement('label');
     const checkbox = document.createElement('input');
     const { id, name } = extansion;
-    tabExtansions.push(id);
+    tabExtansionsActive.push(id);
     checkbox.setAttribute('type', 'checkbox');
     checkbox.setAttribute('data-id', id.toString());
     checkbox.setAttribute('id', 'cbx_' + name.toLowerCase());
@@ -49,7 +54,7 @@ function createCheckboxExtansion(extansion) {
     container.classList.add('checkboxWrapper');
     container.appendChild(checkbox);
     container.appendChild(label);
-    divFilter.appendChild(container);
+    Elements.divFilter.appendChild(container);
 }
 function changePage(e) {
     e.preventDefault();
@@ -61,29 +66,29 @@ function changePage(e) {
     }
     const idElement = element.getAttribute('href');
     const pageElement = document.querySelector(idElement);
-    pages.forEach((page) => page.classList.remove('active'));
+    Elements.pages.forEach((page) => page.classList.remove('active'));
     pageElement.classList.add('active');
 }
 function toggleExtansion(e) {
     const checkbox = e.target;
     const id = Number(checkbox.getAttribute('data-id'));
     if (checkbox.checked) {
-        tabExtansions.push(id);
-        tabExtansions.sort((a, b) => a - b);
+        tabExtansionsActive.push(id);
+        tabExtansionsActive.sort((a, b) => a - b);
     }
     else {
-        var index = tabExtansions.indexOf(id);
+        var index = tabExtansionsActive.indexOf(id);
         if (index !== -1) {
-            tabExtansions.splice(index, 1);
+            tabExtansionsActive.splice(index, 1);
         }
     }
-    gamesFiltered = getFilteredGames();
+    tabGamesFiltered = getFilteredGames();
     displayGames();
 }
 function displayGames() {
-    while (divGames.firstChild)
-        divGames.firstChild.remove();
-    gamesFiltered.forEach((game) => {
+    while (Elements.divGames.firstChild)
+        Elements.divGames.firstChild.remove();
+    tabGamesFiltered.forEach((game) => {
         const gameElement = document.createElement('div');
         const leftElement = document.createElement('div');
         const rightElement = document.createElement('div');
@@ -93,15 +98,21 @@ function displayGames() {
             avatarElement.src = 'images/players/' + tabPlayers[player].image;
             avatarElement.setAttribute('title', tabPlayers[player].name);
             leftElement.appendChild(avatarElement);
-            rightElement.appendChild(medals['1st'].cloneNode(true));
-            rightElement.appendChild(medals['2nd'].cloneNode(true));
-            rightElement.appendChild(medals['3rd'].cloneNode(true));
-            rightElement.appendChild(document.createTextNode(game.scores[0] + 'pts'));
         });
+        const position1 = getPodium(game.scores, 1);
+        rightElement.appendChild(Images.medals['1st'].cloneNode(true));
+        rightElement.appendChild(Images.medals['2nd'].cloneNode(true));
+        rightElement.appendChild(Images.medals['3rd'].cloneNode(true));
+        rightElement.appendChild(document.createTextNode(game.scores[0] + 'pts'));
         gameElement.appendChild(leftElement);
         gameElement.appendChild(rightElement);
-        divGames.appendChild(gameElement);
+        Elements.divGames.appendChild(gameElement);
     });
 }
-function getPodium(position, maxValue = 1000) {
+function getPodium(scores, position, maxValue = 1000) {
+    const scoresFiltered = scores.filter(score => score < maxValue);
+    console.trace(scoresFiltered, Math.max(...scoresFiltered));
+    const maxScore = Math.max(...scoresFiltered);
+    const playersMax = scoresFiltered.reduce((c, score, i) => score === maxScore ? c.concat(i) : c, new Array());
+    console.log(playersMax);
 }

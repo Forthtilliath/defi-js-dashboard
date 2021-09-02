@@ -1,38 +1,46 @@
 import * as data from './data.js';
 import * as utils from './utils.js';
 
-const links = document.querySelectorAll('.link') as NodeListOf<HTMLLinkElement>;
-const pages = document.querySelectorAll('.section') as NodeListOf<HTMLDivElement>;
-const divFilter = document.querySelector('.sectionFilter') as HTMLDivElement;
-const divGames = document.querySelector('.sectionContent') as HTMLDivElement;
-
-const medals = {
-    '1st': new Image(),
-    '2nd': new Image(),
-    '3rd': new Image(),
+const Elements = {
+    links: document.querySelectorAll('.link') as NodeListOf<HTMLLinkElement>,
+    pages: document.querySelectorAll('.section') as NodeListOf<HTMLDivElement>,
+    divFilter: document.querySelector('.sectionFilter') as HTMLDivElement,
+    divGames: document.querySelector('.sectionContent') as HTMLDivElement,
 }
-medals['1st'].setAttribute('src', './images/medals/1st.png');
-medals['2nd'].setAttribute('src', './images/medals/2nd.png');
-medals['3rd'].setAttribute('src', './images/medals/3rd.png');
-medals['1st'].classList.add('medal');
-medals['2nd'].classList.add('medal');
-medals['3rd'].classList.add('medal');
 
+const Images = {
+    medals : {
+        '1st': new Image(),
+        '2nd': new Image(),
+        '3rd': new Image(),
+    }
+};
 
-let tabExtansions = new Array<number>();
+// const medals = {
+//     '1st': new Image(),
+//     '2nd': new Image(),
+//     '3rd': new Image(),
+// };
+Images.medals['1st'].setAttribute('src', './images/medals/1st.png');
+Images.medals['2nd'].setAttribute('src', './images/medals/2nd.png');
+Images.medals['3rd'].setAttribute('src', './images/medals/3rd.png');
+Images.medals['1st'].classList.add('medal');
+Images.medals['2nd'].classList.add('medal');
+Images.medals['3rd'].classList.add('medal');
+
+let tabExtansionsActive = new Array<number>();
 let tabPlayers = new Array<IPlayer>();
+let tabGamesFiltered = new Array<IDataGame>();
 
 // Event pour le changement de page
-links.forEach((link) => link.addEventListener('click', changePage));
+Elements.links.forEach((link) => link.addEventListener('click', changePage));
 
 // Création des checkboxs pour les extansions
 data.extansions.forEach(createCheckboxExtansion);
 data.players.forEach(createPlayersArray);
 // Génération de l'historique des parties
-let gamesFiltered = getFilteredGames();
+tabGamesFiltered = getFilteredGames();
 displayGames();
-
-
 
 // Création Array from json
 function createPlayersArray(player: IDataPlayer) {
@@ -42,22 +50,22 @@ function createPlayersArray(player: IDataPlayer) {
     avatar.src = 'images/players/' + player.image;
     avatar.setAttribute('title', player.name);
 
-    tabPlayers[player.id] = {...player, avatar};
+    tabPlayers[player.id] = { ...player, avatar };
 }
 
-// 
+//
 function getFilteredGames() {
-    return data.games.filter((game) => utils.compareArrays(game.extansions, tabExtansions));
+    return data.games.filter((game) => utils.compareArrays(game.extansions, tabExtansionsActive));
 }
 
-// Creation DOM
+// Modification DOM
 function createCheckboxExtansion(extansion: { id: number; name: string }) {
     const container = document.createElement('span') as HTMLSpanElement;
     const label = document.createElement('label') as HTMLLabelElement;
     const checkbox = document.createElement('input') as HTMLInputElement;
 
     const { id, name } = extansion;
-    tabExtansions.push(id);
+    tabExtansionsActive.push(id);
 
     checkbox.setAttribute('type', 'checkbox');
     checkbox.setAttribute('data-id', id.toString());
@@ -73,12 +81,8 @@ function createCheckboxExtansion(extansion: { id: number; name: string }) {
     container.appendChild(checkbox);
     container.appendChild(label);
 
-    divFilter.appendChild(container);
+    Elements.divFilter.appendChild(container);
 }
-
-
-
-
 
 // Event : Update display
 function changePage(e: MouseEvent) {
@@ -93,7 +97,7 @@ function changePage(e: MouseEvent) {
     const idElement = element.getAttribute('href') as string;
     const pageElement = document.querySelector(idElement) as HTMLDivElement;
 
-    pages.forEach((page) => page.classList.remove('active'));
+    Elements.pages.forEach((page) => page.classList.remove('active'));
     pageElement.classList.add('active');
 }
 
@@ -103,29 +107,29 @@ function toggleExtansion(e: Event) {
     const id = Number(checkbox.getAttribute('data-id'));
 
     if (checkbox.checked) {
-        tabExtansions.push(id);
-        tabExtansions.sort((a, b) => a - b);
+        tabExtansionsActive.push(id);
+        tabExtansionsActive.sort((a, b) => a - b);
     } else {
-        var index = tabExtansions.indexOf(id);
+        var index = tabExtansionsActive.indexOf(id);
         if (index !== -1) {
-            tabExtansions.splice(index, 1);
+            tabExtansionsActive.splice(index, 1);
         }
     }
 
-    gamesFiltered = getFilteredGames();
+    tabGamesFiltered = getFilteredGames();
     displayGames();
 }
 
 // Event : Update display
 function displayGames() {
-    while (divGames.firstChild) divGames.firstChild.remove();
+    while (Elements.divGames.firstChild) Elements.divGames.firstChild.remove();
 
-    gamesFiltered.forEach((game) => {
+    tabGamesFiltered.forEach((game) => {
         const gameElement = document.createElement('div');
         const leftElement = document.createElement('div');
         const rightElement = document.createElement('div');
 
-        game.players.forEach((player) => {
+        game.players.forEach((player:number) => {
             const avatarElement = document.createElement('img');
 
             avatarElement.classList.add('avatar');
@@ -133,21 +137,31 @@ function displayGames() {
             avatarElement.setAttribute('title', tabPlayers[player].name);
 
             leftElement.appendChild(avatarElement);
-
-            rightElement.appendChild(medals['1st'].cloneNode(true));
-            rightElement.appendChild(medals['2nd'].cloneNode(true));
-            rightElement.appendChild(medals['3rd'].cloneNode(true));
-            rightElement.appendChild(document.createTextNode(game.scores[0] + 'pts'))
         });
+
+        const position1 = getPodium(game.scores, 1);
+
+        rightElement.appendChild(Images.medals['1st'].cloneNode(true));
+        rightElement.appendChild(Images.medals['2nd'].cloneNode(true));
+        rightElement.appendChild(Images.medals['3rd'].cloneNode(true));
+        rightElement.appendChild(document.createTextNode(game.scores[0] + 'pts'));
 
         gameElement.appendChild(leftElement);
         gameElement.appendChild(rightElement);
-        divGames.appendChild(gameElement);
+        Elements.divGames.appendChild(gameElement);
     });
 }
 
-function getPodium(position:number, maxValue:number = 1000) {
+function getPodium(scores: number[], position: number, maxValue: number = 1000) {
     // getMaxValue
     // getIndexes
     // getImages
+
+    const scoresFiltered = scores.filter(score => score < maxValue);
+    console.trace(scoresFiltered, Math.max(...scoresFiltered));
+    const maxScore = Math.max(...scoresFiltered);
+    // get all index with scoremax
+    const playersMax = scoresFiltered.reduce((c, score, i) => score === maxScore ? c.concat(i) : c, new Array<number>());
+    // const playersMax = scoresFiltered.find(score => score < maxScore);
+    console.log(playersMax);
 }

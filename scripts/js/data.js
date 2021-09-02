@@ -8,7 +8,7 @@ export const games = [
     {
         id: 1,
         players: [0, 1, 2],
-        scores: [98, 68, 122],
+        scores: [122, 68, 122],
         extansions: [0, 1, 2],
     },
     {
