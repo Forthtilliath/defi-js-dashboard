@@ -13,14 +13,10 @@ const Images = {
         '1st': new Image(),
         '2nd': new Image(),
         '3rd': new Image(),
-    }
+    },
+    // avatars : []
 };
 
-// const medals = {
-//     '1st': new Image(),
-//     '2nd': new Image(),
-//     '3rd': new Image(),
-// };
 Images.medals['1st'].setAttribute('src', './images/medals/1st.png');
 Images.medals['2nd'].setAttribute('src', './images/medals/2nd.png');
 Images.medals['3rd'].setAttribute('src', './images/medals/3rd.png');
@@ -32,15 +28,17 @@ let tabExtansionsActive = new Array<number>();
 let tabPlayers = new Array<IPlayer>();
 let tabGamesFiltered = new Array<IDataGame>();
 
-// Event pour le changement de page
-Elements.links.forEach((link) => link.addEventListener('click', changePage));
+(function init() {
+    // Event pour le changement de page
+    Elements.links.forEach((link) => link.addEventListener('click', changePage));
 
-// Création des checkboxs pour les extansions
-data.extansions.forEach(createCheckboxExtansion);
-data.players.forEach(createPlayersArray);
-// Génération de l'historique des parties
-tabGamesFiltered = getFilteredGames();
-displayGames();
+    // Création des checkboxs pour les extansions
+    data.extansions.forEach(createCheckboxExtansion);
+    data.players.forEach(createPlayersArray);
+    // Génération de l'historique des parties
+    tabGamesFiltered = getFilteredGames();
+    displayGames();
+})();
 
 // Création Array from json
 function createPlayersArray(player: IDataPlayer) {
@@ -139,12 +137,31 @@ function displayGames() {
             leftElement.appendChild(avatarElement);
         });
 
-        const position1 = getPodium(game.scores, 1);
+        let nbPodiumLeft = 3;
+        let maxValue = 9999;
 
         rightElement.appendChild(Images.medals['1st'].cloneNode(true));
-        rightElement.appendChild(Images.medals['2nd'].cloneNode(true));
-        rightElement.appendChild(Images.medals['3rd'].cloneNode(true));
-        rightElement.appendChild(document.createTextNode(game.scores[0] + 'pts'));
+        const podium_1 = getPodium(game.scores, 1, maxValue);
+        podium_1.players.forEach(player => rightElement.appendChild(player.avatar.cloneNode(true)));
+        rightElement.appendChild(document.createTextNode(podium_1.points + 'pts'));
+        nbPodiumLeft -= podium_1.players.length;
+        maxValue = podium_1.points;
+
+        if (nbPodiumLeft >= 2) {
+            rightElement.appendChild(Images.medals['2nd'].cloneNode(true));
+            const podium_2 = getPodium(game.scores, 1, maxValue);
+            podium_2.players.forEach(player => rightElement.appendChild(player.avatar.cloneNode(true)));
+            rightElement.appendChild(document.createTextNode(podium_2.points + 'pts'));
+            nbPodiumLeft -= podium_2.players.length;
+            maxValue = podium_1.points;
+        }
+
+        if (nbPodiumLeft > 0) {
+            rightElement.appendChild(Images.medals['3rd'].cloneNode(true));
+            const podium_3 = getPodium(game.scores, 1, maxValue);
+            podium_3.players.forEach(player => rightElement.appendChild(player.avatar.cloneNode(true)));
+            rightElement.appendChild(document.createTextNode(podium_3.points + 'pts'));
+        }
 
         gameElement.appendChild(leftElement);
         gameElement.appendChild(rightElement);
@@ -152,16 +169,15 @@ function displayGames() {
     });
 }
 
-function getPodium(scores: number[], position: number, maxValue: number = 1000) {
-    // getMaxValue
-    // getIndexes
-    // getImages
-
+function getPodium(scores: number[], position: number, maxValue: number) {
     const scoresFiltered = scores.filter(score => score < maxValue);
-    console.trace(scoresFiltered, Math.max(...scoresFiltered));
     const maxScore = Math.max(...scoresFiltered);
-    // get all index with scoremax
     const playersMax = scoresFiltered.reduce((c, score, i) => score === maxScore ? c.concat(i) : c, new Array<number>());
-    // const playersMax = scoresFiltered.find(score => score < maxScore);
     console.log(playersMax);
+    console.log(playersMax.map(index => tabPlayers[index]));
+
+    return {
+        points: maxScore,
+        players: playersMax.map(index => tabPlayers[index])
+    };
 }

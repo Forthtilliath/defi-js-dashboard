@@ -69,12 +69,17 @@ a, a:visited {
   }
 }
 header {
-  background-color: #0202023a;
+  background-color: #02020291;
   display: flex;
   align-items: center;
   justify-content: space-between;
   height: 50px;
   padding: 0 2em;
+  position: fixed;
+  width: 100vw;
+}
+header .title {
+  color: #f2f2f2;
 }
 header .link {
   display: inline-block;
@@ -95,6 +100,7 @@ header .link .icon {
   justify-content: center;
   flex-direction: column;
   background-size: cover;
+  margin-top: 50px;
 }
 .container .section {
   display: none;
@@ -114,6 +120,7 @@ header .link .icon {
 }
 .container .section#historic {
   background-color: #ff000055;
+  background-color: #6f6f6fcc;
 }
 .container .section#options {
   background-color: #0000ff55;
@@ -180,16 +187,23 @@ header .link .icon {
   margin-left: 1em;
 }
 .container .section .sectionContent > div > *:last-child {
-  background-color: red;
   width: 50%;
   padding: 0.5em 1em;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
 }
-.container .section .sectionContent > div > *:last-child .medal {
+.container .section .sectionContent > div > *:last-child .medal, .container .section .sectionContent > div > *:last-child .avatar {
   width: 30px;
   height: 30px;
   border-radius: 50%;
   object-fit: cover;
-  margin-right: 1em;
+}
+.container .section .sectionContent > div > *:last-child > * {
+  margin-right: 0.5em;
+}
+.container .section .sectionContent > div > *:last-child .medal {
+  margin-left: 0.5em;
 }
 
 .footer {

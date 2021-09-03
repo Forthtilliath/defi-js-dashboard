@@ -11,7 +11,7 @@ const Images = {
         '1st': new Image(),
         '2nd': new Image(),
         '3rd': new Image(),
-    }
+    },
 };
 Images.medals['1st'].setAttribute('src', './images/medals/1st.png');
 Images.medals['2nd'].setAttribute('src', './images/medals/2nd.png');
@@ -22,11 +22,13 @@ Images.medals['3rd'].classList.add('medal');
 let tabExtansionsActive = new Array();
 let tabPlayers = new Array();
 let tabGamesFiltered = new Array();
-Elements.links.forEach((link) => link.addEventListener('click', changePage));
-data.extansions.forEach(createCheckboxExtansion);
-data.players.forEach(createPlayersArray);
-tabGamesFiltered = getFilteredGames();
-displayGames();
+(function init() {
+    Elements.links.forEach((link) => link.addEventListener('click', changePage));
+    data.extansions.forEach(createCheckboxExtansion);
+    data.players.forEach(createPlayersArray);
+    tabGamesFiltered = getFilteredGames();
+    displayGames();
+})();
 function createPlayersArray(player) {
     const avatar = document.createElement('img');
     avatar.classList.add('avatar');
@@ -99,20 +101,41 @@ function displayGames() {
             avatarElement.setAttribute('title', tabPlayers[player].name);
             leftElement.appendChild(avatarElement);
         });
-        const position1 = getPodium(game.scores, 1);
+        let nbPodiumLeft = 3;
+        let maxValue = 9999;
         rightElement.appendChild(Images.medals['1st'].cloneNode(true));
-        rightElement.appendChild(Images.medals['2nd'].cloneNode(true));
-        rightElement.appendChild(Images.medals['3rd'].cloneNode(true));
-        rightElement.appendChild(document.createTextNode(game.scores[0] + 'pts'));
+        const podium_1 = getPodium(game.scores, 1, maxValue);
+        podium_1.players.forEach(player => rightElement.appendChild(player.avatar.cloneNode(true)));
+        rightElement.appendChild(document.createTextNode(podium_1.points + 'pts'));
+        nbPodiumLeft -= podium_1.players.length;
+        maxValue = podium_1.points;
+        if (nbPodiumLeft >= 2) {
+            rightElement.appendChild(Images.medals['2nd'].cloneNode(true));
+            const podium_2 = getPodium(game.scores, 1, maxValue);
+            podium_2.players.forEach(player => rightElement.appendChild(player.avatar.cloneNode(true)));
+            rightElement.appendChild(document.createTextNode(podium_2.points + 'pts'));
+            nbPodiumLeft -= podium_2.players.length;
+            maxValue = podium_1.points;
+        }
+        if (nbPodiumLeft > 0) {
+            rightElement.appendChild(Images.medals['3rd'].cloneNode(true));
+            const podium_3 = getPodium(game.scores, 1, maxValue);
+            podium_3.players.forEach(player => rightElement.appendChild(player.avatar.cloneNode(true)));
+            rightElement.appendChild(document.createTextNode(podium_3.points + 'pts'));
+        }
         gameElement.appendChild(leftElement);
         gameElement.appendChild(rightElement);
         Elements.divGames.appendChild(gameElement);
     });
 }
-function getPodium(scores, position, maxValue = 1000) {
+function getPodium(scores, position, maxValue) {
     const scoresFiltered = scores.filter(score => score < maxValue);
-    console.trace(scoresFiltered, Math.max(...scoresFiltered));
     const maxScore = Math.max(...scoresFiltered);
     const playersMax = scoresFiltered.reduce((c, score, i) => score === maxScore ? c.concat(i) : c, new Array());
     console.log(playersMax);
+    console.log(playersMax.map(index => tabPlayers[index]));
+    return {
+        points: maxScore,
+        players: playersMax.map(index => tabPlayers[index])
+    };
 }
