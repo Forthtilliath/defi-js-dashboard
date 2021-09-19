@@ -109,9 +109,9 @@ header {
                     text-align: end;
                     width: 50%;
                     padding: 0.5em 1em;
+                    flex: 1;
 
                     .avatar {
-                        @include circle(30);
                         margin-left: 1em;
                     }
                 }
@@ -119,16 +119,13 @@ header {
                     width: 50%;
                     padding: 0.5em 1em;
                     @include center();
+                    flex: 2;
 
-                    .medal, .avatar {
-                        @include circle(30);
-                    }
-
-                    > * {
-                        margin-right: 0.5em;
-                    }
                     .medal {
                         margin-left: 0.5em;
+                    }
+                    > * {
+                        margin-right: 0.5em;
                     }
                 }
             }

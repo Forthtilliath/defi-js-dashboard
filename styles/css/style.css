@@ -68,6 +68,13 @@ a, a:visited {
     visibility: visible;
   }
 }
+.medal, .avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 header {
   background-color: #02020291;
   display: flex;
@@ -178,12 +185,9 @@ header .link .icon {
   text-align: end;
   width: 50%;
   padding: 0.5em 1em;
+  flex: 1;
 }
 .container .section .sectionContent > div > *:first-child .avatar {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  object-fit: cover;
   margin-left: 1em;
 }
 .container .section .sectionContent > div > *:last-child {
@@ -192,18 +196,13 @@ header .link .icon {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-}
-.container .section .sectionContent > div > *:last-child .medal, .container .section .sectionContent > div > *:last-child .avatar {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-.container .section .sectionContent > div > *:last-child > * {
-  margin-right: 0.5em;
+  flex: 2;
 }
 .container .section .sectionContent > div > *:last-child .medal {
   margin-left: 0.5em;
+}
+.container .section .sectionContent > div > *:last-child > * {
+  margin-right: 0.5em;
 }
 
 .footer {

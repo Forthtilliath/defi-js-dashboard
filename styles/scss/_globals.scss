@@ -51,3 +51,7 @@ a {
          visibility: visible;
     }
 }
+
+.medal, .avatar {
+    @include circle(30);
+}
